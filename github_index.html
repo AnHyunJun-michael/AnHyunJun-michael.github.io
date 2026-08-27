@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyun-Jun An — Computer Vision Research Portfolio</title>
+<meta name="description" content="Hyun-Jun An — undergraduate research portfolio in computer vision: real-time object detection, industrial recognition pipelines, and 3D human pose & mesh recovery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f5f1;
+    --surface:#ffffff;
+    --ink:#17191c;
+    --ink-soft:#52585e;
+    --ink-faint:#8a8f94;
+    --navy:#1f3a5c;
+    --teal:#2f7268;
+    --amber:#d98b3a;
+    --line:#dedbd2;
+    --serif: 'Source Serif 4', serif;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --maxw: 880px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:var(--teal); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:3px;
+  }
+
+  ::selection{ background:var(--teal); color:#fff; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  /* ---------- corner-bracket signature ---------- */
+  .bracketed{ position:relative; }
+  .bracketed::before, .bracketed::after{
+    content:"";
+    position:absolute;
+    width:16px; height:16px;
+    border-color:var(--teal);
+    border-style:solid;
+    opacity:0.85;
+  }
+  .bracketed::before{
+    top:-1px; left:-1px;
+    border-width:2px 0 0 2px;
+  }
+  .bracketed::after{
+    bottom:-1px; right:-1px;
+    border-width:0 2px 2px 0;
+  }
+
+  /* ---------- nav ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(245,245,241,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .nav-name{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.04em;
+    color:var(--ink); text-decoration:none; font-weight:500;
+  }
+  .nav-links{ display:flex; gap:22px; }
+  .nav-links a{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.04em;
+    color:var(--ink-soft); text-decoration:none;
+    text-transform:uppercase;
+  }
+  .nav-links a:hover{ color:var(--teal); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:88px 0 64px; }
+  .eyebrow{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--teal); margin:0 0 18px;
+  }
+  .eyebrow::before{ content:"// "; color:var(--ink-faint); }
+  h1.thesis{
+    font-family:var(--serif); font-weight:600; font-optical-sizing:auto;
+    font-size:clamp(32px, 5vw, 50px);
+    line-height:1.18; margin:0 0 22px; color:var(--navy);
+    max-width:15ch;
+  }
+  .hero-sub{
+    font-size:16.5px; color:var(--ink-soft); max-width:56ch; margin:0 0 26px;
+  }
+  .meta-line{
+    font-family:var(--mono); font-size:13px; color:var(--ink-faint);
+    display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+  }
+  .meta-line .dot{ color:var(--line); }
+
+  /* ---------- section shell ---------- */
+  section{ padding:52px 0; border-top:1px solid var(--line); }
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:28px; gap:16px; flex-wrap:wrap;
+  }
+  h2.section-title{
+    font-family:var(--serif); font-weight:600; font-size:26px;
+    color:var(--navy); margin:0;
+  }
+  .section-num{
+    font-family:var(--mono); font-size:12.5px; color:var(--ink-faint);
+  }
+
+  /* ---------- about ---------- */
+  .about-body{ max-width:64ch; color:var(--ink-soft); font-size:15.5px; }
+  .about-body p{ margin:0 0 14px; }
+  .about-body strong{ color:var(--ink); font-weight:600; }
+
+  /* ---------- research tags ---------- */
+  .tag-grid{ display:flex; flex-wrap:wrap; gap:10px; }
+  .tag{
+    font-family:var(--mono); font-size:12.5px; color:var(--navy);
+    border:1px solid var(--line); background:var(--surface);
+    padding:8px 12px; border-radius:2px;
+  }
+
+  /* ---------- projects ---------- */
+  .project{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:30px 30px 26px;
+    margin-bottom:26px;
+  }
+  .project:last-child{ margin-bottom:0; }
+  .project-top{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:16px; flex-wrap:wrap; margin-bottom:6px;
+  }
+  h3.project-title{
+    font-family:var(--serif); font-size:21px; font-weight:600;
+    color:var(--ink); margin:0;
+  }
+  .status{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.03em;
+    text-transform:uppercase; padding:4px 9px; border-radius:2px;
+    white-space:nowrap; display:inline-flex; align-items:center; gap:6px;
+  }
+  .status.progress{ color:var(--amber); border:1px solid var(--amber); }
+  .status.done{ color:var(--teal); border:1px solid var(--teal); }
+  .status .pulse{
+    width:6px; height:6px; border-radius:50%; background:currentColor;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .status.progress .pulse{ animation:pulse 1.8s ease-in-out infinite; }
+  }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
+
+  .project-timeline{
+    font-family:var(--mono); font-size:12px; color:var(--ink-faint);
+    margin-bottom:14px;
+  }
+  .project-desc{ color:var(--ink-soft); font-size:15px; margin:0 0 16px; max-width:62ch; }
+  .project-role{
+    font-size:13.5px; color:var(--ink-soft); margin:0 0 16px;
+  }
+  .project-role span{ color:var(--navy); font-weight:600; }
+  .project-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .project-tags span{
+    font-family:var(--mono); font-size:11.5px; color:var(--ink-soft);
+    background:var(--bg); border:1px solid var(--line);
+    padding:4px 9px; border-radius:2px;
+  }
+  .project-link{
+    font-family:var(--mono); font-size:12.5px;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+
+  /* ---------- credentials strip ---------- */
+  .cred-strip{
+    display:flex; flex-wrap:wrap; gap:10px 28px;
+    font-size:14px; color:var(--ink-soft);
+  }
+  .cred-strip li{ list-style:none; }
+  .cred-strip{ padding:0; margin:0; }
+  .cred-strip strong{ color:var(--ink); font-weight:600; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{
+    display:flex; gap:40px; flex-wrap:wrap;
+  }
+  .contact-item .label{
+    font-family:var(--mono); font-size:11.5px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--ink-faint); margin-bottom:6px;
+  }
+  .contact-item a, .contact-item span.val{
+    font-size:15.5px; color:var(--ink);
+  }
+
+  footer{
+    padding:34px 0 60px; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:12px; color:var(--ink-faint);
+  }
+
+  @media (max-width:640px){
+    .hero{ padding:64px 0 44px; }
+    section{ padding:40px 0; }
+    .project{ padding:22px 20px; }
+    .contact-grid{ gap:26px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-name">HYUN-JUN AN</a>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="wrap">
+    <section class="hero" style="border-top:none;">
+      <p class="eyebrow">Undergraduate Researcher · Computer Vision</p>
+      <h1 class="thesis">Teaching machines to see, track, and understand human motion.</h1>
+      <p class="hero-sub">
+        I build perception systems that turn raw visual data into structured understanding —
+        from real-time object detection deployed on industrial parts, to monocular 3D human
+        pose and mesh recovery. Currently applying to graduate programs in computer vision.
+      </p>
+      <p class="meta-line">
+        <span>Woosong University</span><span class="dot">·</span>
+        <span>AI &amp; Big Data</span><span class="dot">·</span>
+        <span>Expected Graduation Feb 2027</span><span class="dot">·</span>
+        <span>Daejeon, Korea</span>
+      </p>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section id="about">
+      <div class="section-head">
+        <h2 class="section-title">About</h2>
+        <span class="section-num">01</span>
+      </div>
+      <div class="about-body">
+        <p>
+          I'm a final-year AI &amp; Big Data student at Woosong University, working toward
+          graduate research in computer vision. My recent work spans <strong>real-time object
+          detection</strong>, an <strong>industry-linked recognition pipeline</strong> built with
+          HP Printing Korea, and an ongoing <strong>monocular 3D human pose and mesh recovery</strong>
+          pipeline applied to sports coaching.
+        </p>
+        <p>
+          Before returning to coursework, I served as an English interpreter for the Korean
+          Army's 17th Infantry Division, including the 2024 Freedom Shield joint exercise —
+          recognized with a commendation from the U.S. 8th Army Commander. That experience is
+          part of why I care about communicating technical work clearly, across languages and
+          audiences.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section id="research">
+      <div class="section-head">
+        <h2 class="section-title">Research Interests</h2>
+        <span class="section-num">02</span>
+      </div>
+      <div class="tag-grid">
+        <span class="tag">Object Detection &amp; Real-Time Deployment</span>
+        <span class="tag">Human-Centric 3D Vision</span>
+        <span class="tag">Domain-Robust Recognition</span>
+        <span class="tag">Remote Sensing / Aerial Imagery</span>
+        <span class="tag">Data Pipeline &amp; MLOps for Vision Systems</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section id="projects">
+      <div class="section-head">
+        <h2 class="section-title">Projects</h2>
+        <span class="section-num">03</span>
+      </div>
+
+      <!-- MotionFit -->
+      <article class="project bracketed">
+        <div class="project-top">
+          <h3 class="project-title">MotionFit</h3>
+          <span class="status progress"><span class="pulse"></span>In Progress</span>
+        </div>
+        <p class="project-timeline">Jul 2026 – Present · Team Project</p>
+        <p class="project-desc">
+          A monocular 3D human pose and mesh recovery pipeline, applied to billiards stroke
+          analysis and coaching. 2D pose estimation via MediaPipe feeds into temporal lifting
+          and 3D mesh recovery, aiming to give frame-by-frame biomechanical feedback from a
+          single camera.
+        </p>
+        <p class="project-role">Role: <span>Full pipeline lead</span> — architecture, 2D pose estimation, and ongoing 3D mesh recovery design.</p>
+        <div class="project-tags">
+          <span>MediaPipe</span><span>PyTorch</span><span>3D Human Pose</span>
+          <span>Mesh Recovery</span><span>Temporal Modeling</span>
+        </div>
+        <a class="project-link" href="#" aria-label="MotionFit repository link — add your GitHub URL">→ View code (add repo link)</a>
+      </article>
+
+      <!-- Deep Part Interpreter -->
+      <article class="project bracketed">
+        <div class="project-top">
+          <h3 class="project-title">Deep Part Interpreter</h3>
+          <span class="status done">Completed</span>
+        </div>
+        <p class="project-timeline">Mar 2026 – Jun 2026 · Industry-Linked Capstone with HP Printing Korea</p>
+        <p class="project-desc">
+          An AI-based printer part recognition system, built end-to-end: a data pipeline for
+          collecting and labeling part imagery, and a YOLO11/YOLO26-based detection model that
+          identifies printer components from a single uploaded photo.
+        </p>
+        <p class="project-role">Role: <span>Data pipeline &amp; model training</span> — built the labeling-to-training pipeline and the detection model.</p>
+        <div class="project-tags">
+          <span>YOLO11</span><span>YOLO26</span><span>Object Detection</span>
+          <span>torchvision</span><span>Data Pipeline</span>
+        </div>
+        <a class="project-link" href="#" aria-label="Deep Part Interpreter repository link — add your GitHub URL">→ View code (add repo link)</a>
+      </article>
+
+      <!-- easyMLOps -->
+      <article class="project bracketed">
+        <div class="project-top">
+          <h3 class="project-title">easyMLOps using Gradio</h3>
+          <span class="status done">Completed</span>
+        </div>
+        <p class="project-timeline">Jan 2026 – Feb 2026 · Qisens Corporate Winter Project</p>
+        <p class="project-desc">
+          A lightweight MLOps interface built with Gradio, covering the full loop for object
+          detection work: polygon labeling, dataset generation, training monitoring, and
+          inference comparison — all in a single web app.
+        </p>
+        <p class="project-role">Role: <span>Research student</span> — designed and built the labeling-to-monitoring workflow.</p>
+        <div class="project-tags">
+          <span>Gradio</span><span>MLOps</span><span>Data Labeling</span><span>Training Pipeline</span>
+        </div>
+        <a class="project-link" href="#" aria-label="easyMLOps repository link — add your GitHub URL">→ View code (add repo link)</a>
+      </article>
+
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section id="credentials">
+      <div class="section-head">
+        <h2 class="section-title">Credentials</h2>
+        <span class="section-num">04</span>
+      </div>
+      <ul class="cred-strip">
+        <li><strong>TOEIC</strong> 955</li>
+        <li><strong>ADSP</strong> (Data Analytics Semi-Professional)</li>
+        <li><strong>SQLD</strong> (SQL Developer)</li>
+        <li><strong>U.S. 8th Army Commander's Commendation</strong> — 2024 Freedom Shield Exercise</li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section id="contact">
+      <div class="section-head">
+        <h2 class="section-title">Contact</h2>
+        <span class="section-num">05</span>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="label">Email</div>
+          <a href="mailto:michaelbmw@naver.com">michaelbmw@naver.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="label">GitHub</div>
+          <a href="#">add your GitHub username</a>
+        </div>
+        <div class="contact-item">
+          <div class="label">Location</div>
+          <span class="val">Daejeon, South Korea</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <footer>
+      Hyun-Jun An · Computer Vision Research Portfolio · Updated August 2026
+    </footer>
+  </div>
+
+</main>
+
+</body>
+</html>
